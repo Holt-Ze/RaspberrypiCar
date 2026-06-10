@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"
+     font-family="SimHei,Heiti SC,sans-serif" font-size="12">
+  <defs>
+    <filter id="sh"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.1"/></filter>
+    <marker id="arrB" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#1e40af"/>
+    </marker>
+    <marker id="arrR" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#dc2626"/>
+    </marker>
+    <marker id="arrO" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#ea580c"/>
+    </marker>
+    <marker id="arrG" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0 0, 10 4, 0 8" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="600" rx="12" fill="#f8fafc"/>
+  <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">夜晚模式状态机 (FSM)</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11" fill="#94a3b8">State Machine — Night Mode</text>
+
+  <!-- State 1: NIGHT_WAIT (左上) -->
+  <rect x="80" y="80" width="220" height="100" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5" filter="url(#sh)"/>
+  <text x="190" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e40af">NIGHT_WAIT</text>
+  <text x="190" y="130" text-anchor="middle" font-size="11" fill="#475569">等待车辆到达</text>
+  <line x1="105" y1="140" x2="275" y2="140" stroke="#93c5fd" stroke-width="0.8"/>
+  <text x="190" y="156" text-anchor="middle" font-size="10" fill="#64748b">栏杆: 关闭 (0°)</text>
+  <text x="190" y="172" text-anchor="middle" font-size="10" fill="#64748b">蜂鸣器: 静音</text>
+
+  <!-- State 2: NIGHT_CAR_HERE (右上) -->
+  <rect x="500" y="80" width="220" height="100" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="2.5" filter="url(#sh)"/>
+  <text x="610" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="#b91c1c">NIGHT_CAR_HERE</text>
+  <text x="610" y="130" text-anchor="middle" font-size="11" fill="#475569">车辆在通道中</text>
+  <line x1="525" y1="140" x2="695" y2="140" stroke="#fca5a5" stroke-width="0.8"/>
+  <text x="610" y="156" text-anchor="middle" font-size="10" fill="#64748b">栏杆: 打开 (90°)</text>
+  <text x="610" y="172" text-anchor="middle" font-size="10" fill="#64748b">蜂鸣器: 3声短鸣</text>
+
+  <!-- State 3: NIGHT_CLOSING (右下) -->
+  <rect x="500" y="400" width="220" height="100" rx="12" fill="#fff7ed" stroke="#f97316" stroke-width="2.5" filter="url(#sh)"/>
+  <text x="610" y="430" text-anchor="middle" font-size="14" font-weight="bold" fill="#9a3412">NIGHT_CLOSING</text>
+  <text x="610" y="450" text-anchor="middle" font-size="11" fill="#475569">关门倒计时中</text>
+  <line x1="525" y1="460" x2="695" y2="460" stroke="#fdba74" stroke-width="0.8"/>
+  <text x="610" y="476" text-anchor="middle" font-size="10" fill="#64748b">栏杆: 仍打开</text>
+  <text x="610" y="492" text-anchor="middle" font-size="10" fill="#64748b">显示剩余秒数</text>
+
+  <!-- State 4: NIGHT_COOLDOWN (左下) -->
+  <rect x="80" y="400" width="220" height="100" rx="12" fill="#f0fdf4" stroke="#22c55e" stroke-width="2.5" filter="url(#sh)"/>
+  <text x="190" y="430" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">NIGHT_COOLDOWN</text>
+  <text x="190" y="450" text-anchor="middle" font-size="11" fill="#475569">冷却期</text>
+  <line x1="105" y1="460" x2="275" y2="460" stroke="#86efac" stroke-width="0.8"/>
+  <text x="190" y="476" text-anchor="middle" font-size="10" fill="#64748b">栏杆: 关闭 (0°)</text>
+  <text x="190" y="492" text-anchor="middle" font-size="10" fill="#64748b">蜂鸣器: 1声确认</text>
+
+  <!-- 转换 WAIT → CAR_HERE -->
+  <path d="M300,130 L500,130" stroke="#1e40af" stroke-width="2.5" fill="none" marker-end="url(#arrB)"/>
+  <rect x="330" y="108" width="140" height="24" rx="5" fill="#dbeafe"/>
+  <text x="400" y="124" text-anchor="middle" font-size="10" fill="#1e40af" font-weight="bold">car_detected() = True</text>
+  <text x="400" y="140" text-anchor="middle" font-size="9" fill="#64748b">(40ms内两次均 &lt; 80cm)</text>
+
+  <!-- 转换 CAR_HERE → CLOSING -->
+  <path d="M610,180 L610,400" stroke="#dc2626" stroke-width="2.5" fill="none" marker-end="url(#arrR)"/>
+  <rect x="622" y="260" width="130" height="45" rx="5" fill="#fee2e2"/>
+  <text x="687" y="277" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="bold">car_detected() = False</text>
+  <text x="687" y="293" text-anchor="middle" font-size="9" fill="#64748b">车已离开</text>
+
+  <!-- 转换 CLOSING → COOLDOWN -->
+  <path d="M500,450 L300,450" stroke="#ea580c" stroke-width="2.5" fill="none" marker-end="url(#arrO)"/>
+  <rect x="330" y="428" width="140" height="24" rx="5" fill="#ffedd5"/>
+  <text x="400" y="444" text-anchor="middle" font-size="10" fill="#ea580c" font-weight="bold">elapsed ≥ 3 秒</text>
+
+  <!-- 转换 COOLDOWN → WAIT -->
+  <path d="M190,400 L190,180" stroke="#16a34a" stroke-width="2.5" fill="none" marker-end="url(#arrG)"/>
+  <rect x="60" y="260" width="110" height="24" rx="5" fill="#dcfce7"/>
+  <text x="115" y="276" text-anchor="middle" font-size="10" fill="#16a34a" font-weight="bold">elapsed ≥ 3 秒</text>
+  <text x="115" y="292" text-anchor="middle" font-size="9" fill="#64748b">冷却结束</text>
+
+  <!-- 图例 -->
+  <g transform="translate(80,530)">
+    <rect width="640" height="50" rx="8" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+    <g font-size="10" fill="#475569">
+      <rect x="15" y="15" width="40" height="18" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+      <text x="65" y="28">状态节点</text>
+      <line x1="130" y1="24" x2="170" y2="24" stroke="#1e40af" stroke-width="2" marker-end="url(#arrB)"/>
+      <text x="180" y="28">转换路径</text>
+      <text x="270" y="28" fill="#64748b">| 触发条件写在路径上</text>
+    </g>
+  </g>
+</svg>

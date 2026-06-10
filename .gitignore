@@ -1,0 +1,20 @@
+# Build artifacts
+*.o
+*.out
+
+# Python
+__pycache__/
+*.pyc
+
+# Template (not project output)
+智能应用系统开发课程设计报告模板2026*.docx
+智能应用系统开发课程设计报告模板2026*.md
+
+# Intermediate files
+课程设计报告正文.md
+
+# Extracted media from template
+media/
+
+# Claude Code
+.claude/
