@@ -44,24 +44,30 @@ WAIT ──车来(<80cm)──▶ CAR_HERE ──车离开──▶ CLOSING(3s�
 
 ```
 Cproject/
-├── read_light.c       # 光敏传感器单独测试
-├── led_control.c      # LED 闪烁测试 (GPIO sysfs)
-├── servo_light.c      # 光敏 + 舵机 + 蜂鸣器联动测试
-├── ultrasonic.c       # HC-SR04 超声波测距测试
-├── parking_radar.c    # ★ 主程序: 智能停车场完整逻辑
-├── WIRING.md          # 详细接线图
-└── README.md          # 本文件
+├── led_control.c         # LED 闪烁测试
+├── read_light.c          # 光敏传感器单独测试
+├── servo_light.c         # 光敏 + 舵机 + 蜂鸣器联动测试
+├── ultrasonic.c          # HC-SR04 超声波测距测试
+├── parking_radar.c       # ★ 主程序: 智能停车场完整逻辑
+├── generate_diagrams.c   # 生成课程设计 SVG 流程图 + PNG
+├── generate_report.c     # 生成课程设计报告 .docx
+├── WIRING.md             # 详细接线图
+└── README.md             # 本文件
 ```
 
-每个 `.c` 文件都是独立的可执行程序，各测试模块的功能：
+> **全部使用 C 语言**，不再依赖 Python。
+
+每个 `.c` 文件都是独立的可执行程序，各模块的功能：
 
 | 文件 | 硬件接口 | 功能 |
 |------|----------|------|
-| `read_light.c` | PCF8591 (wiringPiI2C) | 循环读取光敏传感器 ADC 值并显示百分比 |
 | `led_control.c` | GPIO18 (wiringPi) | LED 闪烁 10 次，演示 digitalWrite 控制 |
+| `read_light.c` | PCF8591 (wiringPiI2C) | 循环读取光敏传感器 ADC 值并显示百分比 |
 | `servo_light.c` | PCF8591 + 舵机(softPwm) + 蜂鸣器 | 根据光照自动控制舵机角度和蜂鸣器报警 |
 | `ultrasonic.c` | HC-SR04 (wiringPi) | 循环测距并显示距离 |
 | `parking_radar.c` | 全部硬件 (wiringPi + softPwm + wiringPiI2C) | ★ v4.0 完整道闸系统，含昼/夜状态机 |
+| `generate_diagrams.c` | — (纯文件输出) | 生成 4 张 SVG 流程图，可选调用 rsvg-convert 转 PNG |
+| `generate_report.c` | — (纯文件输出) | 组装 OOXML + 打包 .docx 课程设计报告 |
 
 ## 编译与运行
 
@@ -77,12 +83,19 @@ dtoverlay=pwm,pin=19,func=2
 ### 编译
 
 ```bash
-# 所有程序统一链接 WiringPi
-gcc -o led_control led_control.c -lwiringPi
-gcc -o read_light read_light.c -lwiringPi
-gcc -o servo_light servo_light.c -lwiringPi
-gcc -o ultrasonic ultrasonic.c -lwiringPi
-gcc -o parking_radar parking_radar.c -lwiringPi
+# 硬件交互程序 (须链接 WiringPi)
+gcc -o led_control       led_control.c       -lwiringPi
+gcc -o read_light        read_light.c        -lwiringPi
+gcc -o servo_light       servo_light.c       -lwiringPi
+gcc -o ultrasonic        ultrasonic.c        -lwiringPi
+gcc -o parking_radar     parking_radar.c     -lwiringPi
+
+# 文档/图表生成程序 (无外部库依赖)
+gcc -o generate_diagrams generate_diagrams.c
+gcc -o generate_report   generate_report.c
+
+# SVG→PNG 转换需要 librsvg (可选):
+# sudo apt install librsvg2-bin
 ```
 
 ### 运行
